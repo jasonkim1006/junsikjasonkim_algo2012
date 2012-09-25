@@ -49,7 +49,7 @@ void testApp::draw(){
         mycircles[i].angle = ((ofGetElapsedTimef()/90.0)*(360.0/NUM_CIRCLES)*(i+1));
         mycircles[i].draw();
         mycircles[i].circleradius = radiusmap2;
-//        mycircles[i].drawLine();
+        mycircles[i].drawLine();
     }
     
     for(int i = 0; i<NUM_CIRCLES; i++){
