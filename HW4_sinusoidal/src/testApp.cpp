@@ -12,10 +12,6 @@ void testApp::setup(){
 
     
     ofBackground(50, 50, 50);
-    
-    lastFireworkTime = ofGetElapsedTimef();
-    
-    font.loadFont("HelveticaLight.ttf", 10);
         
     //colorful sparks
     for (int i = 0; i < 100; i++){
@@ -30,10 +26,11 @@ void testApp::setup(){
         myParticle.setInitialCondition(ofGetWidth()/2 + ofRandom(-50,50), ofGetHeight()/2 + ofRandom(-50,50), myVX, myVY);
 		//myParticle.damping = ofRandom(0.001, 0.05);
         particles.push_back(myParticle);
+        
     }
     
     //white sparks
-    for (int i = 0; i < 2000; i++){
+    for (int i = 0; i < 300; i++){
         particle myParticleTwo;
         x_orig = ofRandom(-1,1);
         y_orig = ofRandom(-1,1);
@@ -55,10 +52,10 @@ void testApp::update(){
     for (int i = 0; i < particles.size(); i++){
         particles[i].resetForce();
         //adds forces on x and y axes.
-        //        particles[i].addForce(0.0, -0.28);
+        particles[i].addForce(0.0, 0.25);
         //without this, there is no damping. will bounce forever
         particles[i].addDampingForce();
-        //        particles[i].bounceOffWalls();
+        particles[i].bounceOffWalls();
         //makes the movement
         particles[i].update();
     }
@@ -66,71 +63,40 @@ void testApp::update(){
     
     for (int i = 0; i < particlesTwo.size(); i++){
         particlesTwo[i].resetForce();
+        particlesTwo[i].addForce(0.0, 0.15);
         particlesTwo[i].addDampingForceTwo();
-        //        particlesTwo[i].bounceOffWalls();
+        particlesTwo[i].bounceOffWalls();
         particlesTwo[i].update();
     }
-    
-    float timeSinceLastFirework = ofGetElapsedTimef() - lastFireworkTime;
-    if(timeSinceLastFirework >= 5.0){
-        for (int i = 0; i < particles.size(); i++){
-            x_orig = ofRandom(-0.5, 0.5);
-            y_orig = ofRandom(-0.5, 0.5);
-            myRadius = ofRandom(3,4);
-            myAngle = ofRandom(360);
-            myVX = x_orig + myRadius * cos(myAngle);
-            myVY = y_orig + myRadius * sin(myAngle);
-            particles[i].setInitialCondition(ofGetWidth()/2 + ofRandom(-50,50), ofGetHeight()/2 + ofRandom(-50,50), myVX, myVY);
-
-        }
-        
-        for (int i = 0; i < particlesTwo.size(); i++){
-            x_orig = ofRandom(-1,1);
-            y_orig = ofRandom(-1,1);
-            myAngle = ofRandom(360);
-            myRadiusTwo = ofRandom(-5,5);
-            myVX2 = x_orig + myRadiusTwo * cos(myAngle);
-            myVY2 = y_orig + myRadiusTwo * sin(myAngle);
-            particlesTwo[i].setInitialCondition(ofGetWidth()/2 + ofRandom(-50,50), ofGetHeight()/2 + ofRandom(-50,50), myVX2, myVY2);
-        }
-        lastFireworkTime = ofGetElapsedTimef();
-    }
-    
-    // on every frame
-	// we reset the forces
-	// add in any forces on the particle
-	// perfom damping and
-	// then update
-    
-
 
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
     
-//    ofSetColor(255,100);
+//    float myMappedX = ofMap(mouseX, 0, ofGetWidth(), 0, 255);
+//    myColor.setHue(myMappedX);
     
     for (int i = 0; i < particles.size(); i++){
-        myColor.r = ofRandom(255);
-        myColor.g = ofRandom(255);
-        myColor.b = ofRandom(255);
-        myColor.a = ofRandom(255);
-        ofSetColor(myColor);
-        particles[i].circleRadius = 4;
+        ofNoFill();
+        float myMappedX = ofMap(particles[i].pos.x, 0, ofGetWidth(), 0, 255);
+        myColor.setSaturation(myMappedX);
+        ofSetColor(myMappedX,200,200);
+//        ofSetColor(myColor);
         particles[i].draw();
+
+//        ofLine(particles[i].pos.x, particles[i].pos.y, particles[i+1].pos.x, particles[i+1].pos.x);
     }
 
     for (int i = 0; i < particlesTwo.size(); i++){
-        ofSetColor(200,200,200,ofRandom(50));
+        ofNoFill();
+        particlesTwo[i].circleRadiusMap = 2;
+        ofSetColor(200,200,200,ofRandom(100));
         particlesTwo[i].draw();
         
     }
     
     
-    float timeUntilFirework = 5 - (ofGetElapsedTimef() - lastFireworkTime);
-    ofSetColor(255);
-    font.drawString("Next firework in "+ofToString(timeUntilFirework,1)+" seconds", 20, 20);
     
 
 
@@ -158,9 +124,33 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-//    for (int i = 0; i < particles.size(); i++){
-//        particles[i].setInitialCondition(mouseX, mouseY, ofRandom(-10,10), ofRandom(-10,10));
-//    }
+    
+    
+    float myR = mouseY;
+    float myRMap = ofMap(myR, 0, ofGetHeight(), 12, 0);
+
+    for (int i = 0; i < particles.size(); i++){
+        x_orig = ofRandom(-0.5, 0.5);
+        y_orig = ofRandom(-0.5, 0.5);
+        myRadius = ofRandom(3,4);
+        myAngle = ofRandom(360);
+        myVX = x_orig + myRadius * cos(myAngle);
+        myVY = y_orig + myRadius * sin(myAngle);
+        myVX = x_orig + myRMap * cos(myAngle);
+        myVY = y_orig + myRMap * sin(myAngle);
+        particles[i].setInitialCondition(mouseX, mouseY, myVX, myVY);
+        
+    }
+    
+    for (int i = 0; i < particlesTwo.size(); i++){
+        x_orig = ofRandom(-1,1);
+        y_orig = ofRandom(-1,1);
+        myAngle = ofRandom(360);
+        myRadiusTwo = ofRandom(-5,5);
+        myVX2 = x_orig + myRadiusTwo * cos(myAngle);
+        myVY2 = y_orig + myRadiusTwo * sin(myAngle);
+        particlesTwo[i].setInitialCondition(mouseX, mouseY, myVX2, myVY2);
+    }
 
 }
 

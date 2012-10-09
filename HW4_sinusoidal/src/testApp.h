@@ -36,8 +36,4 @@ class testApp : public ofBaseApp{
         float y_orig;
     
         ofColor myColor;
-    
-        float myTime;
-        float lastFireworkTime;
-        ofTrueTypeFont font;
 };
