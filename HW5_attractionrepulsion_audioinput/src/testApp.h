@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "particle.h"
+#include "windBlow.h"
 
 class testApp : public ofBaseApp{
 
@@ -21,9 +22,14 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
         vector <particle> particles;
-
+    
         bool isRepulsive;
         int  forceType;
     
+        windBlow windblows;
+        ofSoundStream mySound;
+    
+        float windRadius;
+        void audioIn(float * input, int bufferSize, int nChannels);
     
 };
