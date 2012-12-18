@@ -49,6 +49,10 @@ class channelTwo : public baseScene {
         //Remove noise of IMU using xenopointer
         xenoPointer xenopointertwo;
     
+        //Button
+        float buttonValue;
+        float lastButtonValue;
+    
 };
 
 

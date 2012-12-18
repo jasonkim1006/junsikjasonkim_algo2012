@@ -34,6 +34,7 @@
 		EC050A5F167F2E26008117DF /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC050A5D167F2E26008117DF /* particle.cpp */; };
 		EC936941167EF73100FEEDD7 /* RazorAHRS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC93693F167EF73100FEEDD7 /* RazorAHRS.cpp */; };
 		EC936944167EF89B00FEEDD7 /* xenoPointer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC936942167EF89B00FEEDD7 /* xenoPointer.cpp */; };
+		EC93D8C51680B1D2006DB3C6 /* soundVolume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC93D8C31680B1D2006DB3C6 /* soundVolume.cpp */; };
 		ECAE7C6916806A5900B912D2 /* particletwo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECAE7C6716806A5900B912D2 /* particletwo.cpp */; };
 		ECAE7C6D168077B500B912D2 /* spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECAE7C6B168077B500B912D2 /* spring.cpp */; };
 /* End PBXBuildFile section */
@@ -107,6 +108,8 @@
 		EC936940167EF73100FEEDD7 /* RazorAHRS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RazorAHRS.h; sourceTree = "<group>"; };
 		EC936942167EF89B00FEEDD7 /* xenoPointer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xenoPointer.cpp; sourceTree = "<group>"; };
 		EC936943167EF89B00FEEDD7 /* xenoPointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xenoPointer.h; sourceTree = "<group>"; };
+		EC93D8C31680B1D2006DB3C6 /* soundVolume.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = soundVolume.cpp; sourceTree = "<group>"; };
+		EC93D8C41680B1D2006DB3C6 /* soundVolume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundVolume.h; sourceTree = "<group>"; };
 		ECAE7C6716806A5900B912D2 /* particletwo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particletwo.cpp; sourceTree = "<group>"; };
 		ECAE7C6816806A5900B912D2 /* particletwo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particletwo.h; sourceTree = "<group>"; };
 		ECAE7C6B168077B500B912D2 /* spring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spring.cpp; sourceTree = "<group>"; };
@@ -219,6 +222,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				EC936942167EF89B00FEEDD7 /* xenoPointer.cpp */,
 				EC936943167EF89B00FEEDD7 /* xenoPointer.h */,
+				EC93D8C31680B1D2006DB3C6 /* soundVolume.cpp */,
+				EC93D8C41680B1D2006DB3C6 /* soundVolume.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -372,6 +377,7 @@
 				EC050A5F167F2E26008117DF /* particle.cpp in Sources */,
 				ECAE7C6916806A5900B912D2 /* particletwo.cpp in Sources */,
 				ECAE7C6D168077B500B912D2 /* spring.cpp in Sources */,
+				EC93D8C51680B1D2006DB3C6 /* soundVolume.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

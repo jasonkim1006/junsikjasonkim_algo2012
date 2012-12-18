@@ -90,6 +90,19 @@ void channelTwo::update(){
 		particlestwo[i].update();
     }
     
+    buttonValue = channelTwoButton;
+    
+    if(buttonValue != lastButtonValue){
+        if(buttonValue == 3){
+            for(int i = 0; i < particlestwo.size(); i++){
+                particlestwo[i].setInitialCondition(ofRandom(0,ofGetWidth()), ofRandom(0,ofGetHeight()), 0, 0);
+            }
+        }
+        lastButtonValue = buttonValue;
+    }
+    
+    
+    
     xenopointertwo.xenoToPoint(channelTwoYaw, channelTwoPitch);
 }
 
@@ -135,6 +148,7 @@ void channelTwo::draw(float yaw, float pitch, float roll, int buttonState){
     else if(channelTwoButton == 4){
         ofSetColor(200,200,200);
     }
+        
     xenopointertwo.draw();
 
 }

@@ -255,7 +255,12 @@ void particletwo::update(){
 
 //------------------------------------------------------------
 void particletwo::draw(){
-    ofCircle(pos.x, pos.y, 3);
+    
+    float myMappedX = ofMap(pos.x, 0, ofGetWidth(), 0, 255);
+    float myMappedY = ofMap(pos.y, 0, ofGetHeight(), 150, 255);
+    ofSetColor(myMappedY, myMappedY, myMappedX, 150);
+    
+    ofCircle(pos.x, pos.y, 2);
 }
 
 

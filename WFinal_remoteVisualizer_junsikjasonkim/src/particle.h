@@ -47,7 +47,6 @@ public:
     //set friction amount
     float angle;
     
-    ofColor myColor;
     
 protected:
 private:

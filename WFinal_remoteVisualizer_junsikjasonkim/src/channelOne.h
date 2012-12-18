@@ -54,6 +54,7 @@ class channelOne : public baseScene {
         vector <particletwo> particles;
         vector <spring> springs;
         vector <ofPoint> trail;
+    
 };
 
 #endif /* defined(__remoteMusicVisualizer_junsikjasonkim__channelOne__) */

@@ -7,7 +7,9 @@
 #include "channelOne.h"
 #include "channelTwo.h"
 #include "channelThree.h"
+#include "particle.h"
 #include "particletwo.h"
+#include "soundVolume.h"
 
 #define BUFFER_SIZE 512
 class testApp : public ofBaseApp{
@@ -41,16 +43,30 @@ class testApp : public ofBaseApp{
         float yawOffset; //calibrating gyroscope
         float imuSpeed;
         string imuData;
+        string screenOneData;
+        string screenTwoData;
     
         ofTrueTypeFont myFont;
         ofTrueTypeFont mySmallFont;
         bool bFullScreen;
     
-        //Particle for FFT
+        //Particle for Screen One
+        vector <particle> particles;
+    
+        //Particle for Screen Two
         vector <particletwo> myparticles;    
         bool    bRepel;
         float   radius;
         float   strength;
+    
+        float   imuRepulsionRadius;
+    
+        //Button
+        float buttonValue;
+        float lastButtonValue;
+    
+        xenoPointer xenopointer;
+    
     
 
 

@@ -44,7 +44,9 @@ class particletwo
         bool  bFixed;
         
         float damping;
-        
+    
+        ofColor myColor;
+    
     protected:
     private:
 };

@@ -83,17 +83,28 @@ void testApp::setup(){
     }
     sceneNumber = 0;
     
-    //FFT particles
+    //Screen One particles
+    for(int i = 0; i < 1000; i++){
+        particle myParticle;
+        myParticle.setInitialCondition(ofRandom(0,ofGetWidth()), ofRandom(0,ofGetHeight()), 0, 0);
+        particles.push_back(myParticle);
+    }
+    
+    //Screen Two particles
     for(int i = 0; i < 200; i++){
         particletwo myParticle;
-        myParticle.setInitialCondition(ofRandom(0, ofGetWidth()), ofRandom(0, ofGetHeight()), 0, 0);
+        myParticle.setInitialCondition(ofRandom(0, ofGetWidth()), ofRandom(ofGetHeight()/3 - 20, ofGetHeight()/3 + 20), 0, 0);
         myparticles.push_back(myParticle);
     }
     bRepel = true;
-    radius = 40;
+    radius = 5;
     strength = 0.5f;
-        
-
+    
+    //Xeno
+    xenopointer.catchUpSpeed = 0.1f;
+    xenopointer.xenoRadius = 3;
+    
+    imuRepulsionRadius = 1;
 }
 
 //--------------------------------------------------------------
@@ -108,32 +119,111 @@ void testApp::update(){
 //    xYaw = ofMap(yaw - yawOffset, -30,30,0,ofGetWidth());
 //    yPitch = ofMap(pitch, -50,50,0,ofGetHeight());
     
-    //FFT Particles
+    
+    //Channel One Particles
+    for (int i = 0; i < particles.size(); i++){
+        particles[i].resetForce();
+        particles[i].addForce(-1.0, 0);
+        
+        if(bRepel){
+            particles[i].addRepulsionForce(xenopointer.pos.x, xenopointer.pos.y, imuRepulsionRadius, 3.0);
+        }
+        else{
+            particles[i].addAttractionForce(xenopointer.pos.x, xenopointer.pos.y, imuRepulsionRadius, 3.0);
+        }
+        
+        if (particles[i].pos.x <= 0){
+            particles[i].pos.x = ofGetWidth() + 10;
+        }
+        
+        if (particles[i].pos.y > ofGetHeight()*2/3 + 20){
+            particles[i].addForce(0,-1.0);
+        }
+        
+        if (particles[i].pos.y < ofGetHeight()*2/3 - 20){
+            particles[i].addForce(0,1.0);
+        }
+        
+        particles[i].bounceOffWalls();
+        particles[i].addDampingForce();
+		particles[i].update();
+    }
+    
+    //Channel Two Particles
     for (int i = 0; i < myparticles.size(); i++){
         myparticles[i].resetForce();
+        myparticles[i].addForce(1.0, 0);
+        if(bRepel){
+            myparticles[i].addRepulsionForce(xenopointer.pos.x, xenopointer.pos.y, imuRepulsionRadius, 3.0);
+        }
+        else{
+            myparticles[i].addAttractionForce(xenopointer.pos.x, xenopointer.pos.y, imuRepulsionRadius, 3.0);
+        }
+        
+        if (myparticles[i].pos.x > ofGetWidth()){
+            myparticles[i].pos.x = -10;
+        }
+        
+        if (myparticles[i].pos.y > ofGetHeight()/3 + 20){
+            myparticles[i].addForce(0,-1.0);
+        }
+        
+        if (myparticles[i].pos.y < ofGetHeight()/3 - 20){
+            myparticles[i].addForce(0,1.0);
+        }
+        myparticles[i].addDampingForce();
+		myparticles[i].update();
     }
     
     for (int i = 0; i < myparticles.size(); i++){
-        myparticles[i].addRepulsionForce(xYaw, yPitch, 200, 1.4);
         for(int j = 0; j < i; j++){
-            myparticles[i].addRepulsionForce(myparticles[j], 50, 0.4);
-			myparticles[i].addAttractionForce(myparticles[j], 500, 0.005);
+            myparticles[i].addRepulsionForce(myparticles[j], 20, 0.4);
+			myparticles[i].addAttractionForce(myparticles[j], 50, 0.005);
         }
-        for (int j = 0; j < i; j++){
-            if (bRepel){
-                myparticles[i].addRepulsionForce(myparticles[j], radius, strength);
-            } else {
-                myparticles[i].addAttractionForce(myparticles[j], radius, strength);
+//        for (int j = 0; j < i; j++){
+//            if (bRepel){
+//                myparticles[i].addRepulsionForce(myparticles[j], radius, strength);
+//            } else {
+//                myparticles[i].addAttractionForce(myparticles[j], radius, strength);
+//            }
+//        }
+    }
+    
+    //IMU Repulsion Radius
+    if (sceneNumber == 2){
+        buttonValue = buttonState;
+        
+        if(buttonValue != lastButtonValue){
+            if(buttonValue == 3){
+                for(int i = 0; i < particles.size(); i++){
+                    particles[i].setInitialCondition(ofRandom(0,ofGetWidth()), ofRandom(0,ofGetHeight()), 0, 0);
+                }
+            }
+            if(buttonValue == 4){
+                bRepel = !bRepel;
+            }
+            lastButtonValue = buttonValue;
+        }
+        if (roll < -30){
+            imuRepulsionRadius ++;
+        }
+        if (roll > 30){
+            imuRepulsionRadius --;
+            if (imuRepulsionRadius <= 1){
+                imuRepulsionRadius = 1;
             }
         }
+        if (roll > 170 || roll < -170){
+            imuRepulsionRadius = 1;
+        }
     }
     
-
-    for (int i = 0; i < myparticles.size(); i++){
-		myparticles[i].addDampingForce();
-		myparticles[i].update();
-	}
+    xenopointer.xenoToPoint(xYaw, yPitch);
     
+    if(sceneNumber == 2){
+
+    }
+
     //Scenes
     scenes[sceneNumber]->update();
 }
@@ -142,13 +232,43 @@ void testApp::update(){
 void testApp::draw(){
     //ButtonState is a int: 1up 2down 3left 4right 5center
     
-    imuData =   "Yaw = " + ofToString(yaw, 0.0f) +
-                "\n\nPitch = " + ofToString(pitch, 0.0f) +
-                "\n\nRoll = " + ofToString(roll, 0.0f);
+    imuData =       "Yaw = " + ofToString(yaw, 0.0f) +
+                    "\n\nPitch = " + ofToString(pitch, 0.0f) +
+                    "\n\nRoll = " + ofToString(roll, 0.0f) +
+                    "\n\nUp Button = Refresh Sketch" +
+                    "\n\nLeft Button = Decrease Line Width" +
+                    "\n\nRight Button = Increase Line Width" +
+                    "\n\nTouch Pointer Below Screen = Other Menus";
     
+    screenOneData = "Yaw = " + ofToString(yaw, 0.0f) +
+                    "\n\nPitch = " + ofToString(pitch, 0.0f) +
+                    "\n\nRoll = " + ofToString(roll, 0.0f) +
+                    "\n\nUp Button = Main Menu" +
+                    "\n\nCenter Button = Attraction " +
+                    "\n\nLeft Button = Renew Particles" + 
+                    "\n\nMapped Roll Right = Clockwise" +
+                    "\n\nMapped Roll Left = Counter Clockwise";
+    
+    screenTwoData = "Yaw = " + ofToString(yaw, 0.0f) +
+                    "\n\nPitch = " + ofToString(pitch, 0.0f) +
+                    "\n\nRoll = " + ofToString(roll, 0.0f) +
+                    "\n\nUp Button = Main Menu" +
+                    "\n\nCenter Button = Add Particles" +
+                    "\n\nRight Button = Repulsion / Attraction" + 
+                    "\n\nLeft Button = Renew Bottom Particles" +
+                    "\n\nRoll Right = Increase Radius" +
+                    "\n\nRoll Left = Decrease Radius" +
+                    "\n\nFlip Over = Restart Radius";
+    
+    ofSetColor(200,200,200);
     if(sceneNumber == 0){
-        ofSetColor(255,255,0);
         mySmallFont.drawString(imuData, 100, 100);
+    }
+    if(sceneNumber == 1){
+        mySmallFont.drawString(screenOneData, 100, 100);
+    }
+    if(sceneNumber == 2){
+        mySmallFont.drawString(screenTwoData, 100, 100);
     }
     
     //Down Button Calibrates the YAW for each Screen
@@ -158,7 +278,7 @@ void testApp::draw(){
         }
     }
     
-    //JASON ADD BUTTON COUNTER!
+    //Universal Button States (main menu, screen1, screen2)
     if(buttonState == 1){
         sceneNumber = 0;
     }
@@ -170,10 +290,19 @@ void testApp::draw(){
     
     ofSetColor(255,255,255);
     
-    //FFT Analyzing**************************************************************
+    //Screen Two **************************************************************
     if(sceneNumber == 2){
-
-        //FFT particles
+        //Bottom Particles
+        for (int i = 0; i < particles.size(); i++){
+            particles[i].draw();
+        }
+        
+        //Top Particles
+        ofNoFill();
+        ofSetColor(200,200,200,50);
+        ofCircle(xenopointer.pos, imuRepulsionRadius);
+        ofFill();
+        
         for (int i = 0; i < myparticles.size(); i++){
             ofSetColor(255,0,0);
             myparticles[i].draw();
